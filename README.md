@@ -33,9 +33,9 @@ PC - Router => Cable cruzado
 - `name $nombre` => le pone nombre a la vlan
 
 ### Telnet o ssh son protocolos de capa 3, antes de usarse, tiene que configurarse los dispositivos en capa 3
-- `line vty 0 1
-- login
-- password $password
+- `line vty 0 1`
+- `login`
+- `password $password`
 - exec-timeout $minutos`
 
 ### Asignacion de puerto a una vlan
@@ -51,11 +51,11 @@ PC - Router => Cable cruzado
 
 ### Configurar agregado de enlace LACP
 - `port-channel load-balance {dst-mac | src-mac}` => trafico de router a switch (una MAC origen a muchas MAC destino) DST-MAC, y tráfico de desde PC a SWITCH (muchas MAC origen a una destino) SRC-MAC
-`interface gigabitethernet 1/1
-switchport mode trunk
-channel-protocol LACP
-channel-group 1 mode active
-exit`
+`interface gigabitethernet 1/1`
+`switchport mode trunk`
+`channel-protocol LACP`
+`channel-group 1 mode active`
+`exit`
 
 - `interface f0/x` => entrar en modo configuracion de interfaz
 - `interface range f0/x-y` => entrar en modo configuracion rango de interface
@@ -63,11 +63,11 @@ exit`
 - `shutdown` => enciendo el puerto
 
 ### Configuracion de seguridad de puerto por MAC
-- `switchport mode access
-- switchport port-security
-- switchport port-security maximum 1
-- switchport port-security mac-address xxxx.xxxx.xxxx.xxxx
-- switchport port-security violation shutdown`
+- `switchport mode access`
+- `switchport port-security`
+- `switchport port-security maximum 1`
+- `switchport port-security mac-address xxxx.xxxx.xxxx.xxxx`
+- `switchport port-security violation shutdown`
 
 ## Todos los modos
 - `exit` => volver un modo hacia atrás
