@@ -1,10 +1,13 @@
 # Comandos-redes
 
 ## A tener en cuenta
-PC - Switch(consola) (Cable consola) (RS232 - Console)
-PC - Switch => Cable directo (fastEthernet - fastEthernet)
-Switch - Switch => Cable cruzado (última fastEthernet - última fastEthernet)
-PC - Router => Cable cruzado
+- PC - Switch(consola) => (Cable consola) (RS232 - Console)
+- PC - Switch => Cable directo (fastEthernet - fastEthernet)
+- Switch - Switch => Cable cruzado (última fastEthernet - última fastEthernet)
+- PC - Router => Cable cruzado
+- Switch - Router => Cable directo
+- Router - Router (WAN) => Cable DCE (Serialx/0)
+- En redes WLAN, se utilizan cables Serial DTE para la conexión entre routers. Dentro de la LAN local, se utiliza fastEthernet para la conexión entre Router y Switch.
 
 ## Modo usuario
 - `?` => ver comandos (en cualqueir modo de ejecución)
@@ -23,6 +26,8 @@ PC - Router => Cable cruzado
 
 - `copy running-config startup-config` => copia configuracion de memoria ram a memoria flash
 
+- `show ip route` => muestra la tabla de routeo
+
 ## Modo Configuración global
 
 - `hostname $name` => asignar nombre al switch
@@ -36,7 +41,7 @@ PC - Router => Cable cruzado
 - `line vty 0 1`
 - `login`
 - `password $password`
-- exec-timeout $minutos`
+- `exec-timeout $minutos`
 
 ### Asignacion de puerto a una vlan
 - `interface f0/x`
@@ -68,6 +73,12 @@ PC - Router => Cable cruzado
 - `switchport port-security maximum 1`
 - `switchport port-security mac-address xxxx.xxxx.xxxx.xxxx`
 - `switchport port-security violation shutdown`
+
+### Configurar una ip para una interfaz
+- `interface x0/0`
+- `ip address xxx.xxx.xxx.xxx yyy.yyy.yyy.yyy` (ip and mask)
+- `no shutdown`
+
 
 ## Todos los modos
 - `exit` => volver un modo hacia atrás
