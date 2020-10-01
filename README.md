@@ -28,6 +28,12 @@
 
 - `show ip route` => muestra la tabla de routeo
 
+- `show ip protocols` => muestra el protocolo de enrutamiento
+
+- `debug ip rip` => modo debug protocolo RIP
+
+- `show access-lists`
+
 ## Modo Configuración global
 
 - `hostname $name` => asignar nombre al switch
@@ -79,6 +85,31 @@
 - `ip address xxx.xxx.xxx.xxx yyy.yyy.yyy.yyy` (ip and mask)
 - `no shutdown`
 
+### Configurar enrutamiento dinámico con RIP
+- `router rip`
+- `version 2`
+- `network 192.168.1.0`
+- `exit`
+
+### Desactivar tráfico generado por RIP
+- `router rip`
+- `passive-interface f0/0` => Con este comando a la interfaz marcada no se le envían las actualizaciones del RIP desde el Router. Se utiliza cuando en la interfaz marcada no hay otro Router conectados (hay una pc o un Switch).
+
+### Redistribuir ips estáticas a los otros routers
+- `router rip`
+- `redistribute static`
+
+### NO Sumarizar rutas
+- `router rip`
+- `no auto-summary` => Al ingresar este comando le decimos al Router que NO sumarice las rutas que tiene. Es de gran
+utilidad cuando no tenemos redes contiguas
+
+### Creación de una ACL estándar.
+- `access-list 1 permit 192.168.1.0 0.0.0.127` 
+
+### Activar el ACL
+- `interface f0/0`
+- `ip access-group 1 in`
 
 ## Todos los modos
 - `exit` => volver un modo hacia atrás
