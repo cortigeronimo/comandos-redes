@@ -19,7 +19,7 @@ Cable Cruzado:
 - PC a PC
 - Router a PC
 
-Cable Cruzado:
+Cable Directo:
 - Router con Switch
 - Router con HUB
 - HUB con Switch
@@ -149,7 +149,7 @@ utilidad cuando no tenemos redes contiguas
 - `ip access-group Nro_ACL in|out` => es una buen a práctica poner "in" cuando es standard
 
 ### Creación de una ACL extendida (usar en caso que nos pidan más cosas que denegar/permitir)
-- `access-list Nro_ACL permit|deny ip Origen Destino [Operador Nro_puerto] [established] [echo | echo-reply]` => Nro_ACL va de 100 a 199 y 2000 a 2699. Ejemplo: - `access-list Nro_ACL permit|deny ip xxxx.xxxx.xxxx.xxxx $wildcard yyyy.yyyy.yyyy.yyyy $wildcard`
+- `access-list Nro_ACL permit|deny ip Origen Destino [Operador Nro_puerto] [established] [echo | echo-reply]` => Nro_ACL va de 100 a 199 y 2000 a 2699. Ejemplo: - `access-list Nro_ACL permit|deny ip xxxx.xxxx.xxxx.xxxx $wildcard yyyy.yyyy.yyyy.yyyy $wildcard` esto se de forma viceversa (según corresponda)
 - `interface x0/0`
 - `ip access-group Nro_ACL [in|out]` => es una buen a práctica poner "out" cuando es extendida
 
@@ -162,6 +162,42 @@ utilidad cuando no tenemos redes contiguas
 - `interface f0/0`
 - `ip access-group 1 in`
 
+### Configuración de IKE (primera fase de negociación segura)
+- `configure terminal`
+- `crypto isakmp policy 10` => política criptográfica (método de distribución de claves)
+- `encr AES` => algoritmo de cifrado
+- `authentication pre-share` => método de autenticación
+- `group 5` => (Diffie-Hellman grupo 5 – clave de 1536 bits)
+- `lifetime 3600` =>  (tiempo de vida en segundos) 
+PD: para el router extremo es exactamente lo mismo
+
+### Definición de clave simétrica en el otro extremo del túnel
+`crypto isakmp key cisco address X.X.X.X` => cisco es la clave criptográfica y X.X.X.X es la ip del router contrario con el que quiero establecer la comunicación (la pública)
+PD: es en ambos routers
+
+### Configuración IPSec modo túnel (segunda fase de negociación segura)
+`crypto ipsec transform-set MYTSETNAME esp-aes 256 esp-shahmac mode tunnel` => MYSETNAME es un número
+
+### Configurar el mapa que determina la IP del extremo remoto del túnel y el tráfico de interés que será encapsulado.
+`crypto map LEFTY_TO_RIGHTY 10 ipsec-isakmp set peer X.X.X.X match address 101 set transform-set MYTSETNAME` => donde X.X.X.X es la ip del router extremo (la pública)
+
+### Activar el túnel (en el router donde sale la data, interfaz pública)
+- `int fastEthernet 0/0` 
+- `crypto map LEFTY_TO_RIGHTY`
+
 ## Todos los modos
 - `exit` => volver un modo hacia atrás
 - `ctrl + shift + 6` => abortar comando
+
+
+
+router eigrp 99
+ network 55.0.0.0
+ network 30.0.0.0
+ auto-summary
+!
+router rip
+ version 2
+ redistribute eigrp 99 
+ network 30.0.0.0
+ network 55.0.0.0
